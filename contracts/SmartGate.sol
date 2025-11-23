@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.30;
 
-import "contracts/Encryptor.sol";
-import "contracts/StatsEngine.sol";
+import "./Encryptor.sol";
+import "./StatsEngine.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
-import "contracts/Types.sol";
+import "./Types.sol";
 
 contract SmartGate{
     
@@ -79,9 +79,23 @@ contract SmartGate{
     //     return average;
     // }
 
-    function gateOperation(uint[] memory values, Types.EncryptionMode mode, bool advancedMode) public returns (uint avg, uint minVal, uint maxVal, uint variance, uint median, uint standardDeviation, uint percentile, string memory encryptedAddress) {
+    event GateOperationResult(
+    uint avg,
+    uint minVal,
+    uint maxVal,
+    uint variance,
+    uint median,
+    uint standardDeviation,
+    uint percentile
+    );
+
+    event debug1(string add);
+
+    function gateOperation(uint[] memory values, Types.EncryptionMode mode, bool advancedMode) public returns (uint avg, uint minVal, uint maxVal, uint variance, uint median, uint standardDeviation, uint percentile) {
+        
         Encryptor encryptor = Encryptor(encryptorAddress);
-        encryptedAddress = encryptor.encryptAddress(msg.sender, mode);
+        string memory encryptedAddress = encryptor.encryptAddress(msg.sender, mode);
+        emit debug1(encryptedAddress);
         encryptedAddressToTransactions[encryptedAddress].push(block.timestamp);
         if(!checkSenderTransactions(encryptedAddress)){
             revert(string.concat(
@@ -95,9 +109,15 @@ contract SmartGate{
         minVal = stats.minimum(values);
         maxVal = stats.maximum(values);
         
-        if(!advancedMode) return (avg, minVal, maxVal,0,0,0,0, encryptedAddress);
-        (variance, median, standardDeviation, percentile) = advancedAnalytics(values);
-        return (avg, minVal, maxVal, variance, median, standardDeviation, percentile, encryptedAddress);
+        //if(!advancedMode) return (avg, minVal, maxVal,0,0,0,0, encryptedAddress);
+        if(!advancedMode){ 
+            emit GateOperationResult(avg, minVal, maxVal,0,0,0,0);
+            return (avg, minVal, maxVal,0,0,0,0);
+        } else {
+            (variance, median, standardDeviation, percentile) = advancedAnalytics(values);
+            emit GateOperationResult(avg, minVal, maxVal, variance, median, standardDeviation, percentile);
+        }
+        return (avg, minVal, maxVal, variance, median, standardDeviation, percentile);
     }
 
     function advancedAnalytics(uint[] memory values) private view returns (uint variance, uint median, uint standardDeviation, uint percentile) {

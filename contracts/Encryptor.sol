@@ -2,7 +2,7 @@
 pragma solidity ^0.8.30;
 
 import "@openzeppelin/contracts/utils/Strings.sol";
-import "contracts/Types.sol";
+import "./Types.sol";
 
 contract Encryptor {
     using Types for Types.EncryptionMode;

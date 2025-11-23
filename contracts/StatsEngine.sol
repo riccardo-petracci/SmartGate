@@ -6,7 +6,7 @@ contract StatsEngine{
         require(values.length > 0, "Array must have at least one element");
         uint sum = 0;
         for (uint i = 0; i < values.length; i++) {
-            sum += values[i];
+            unchecked { sum += values[i]; }
         }
         return sum / values.length;
     }
@@ -38,7 +38,8 @@ contract StatsEngine{
         uint sumSq = 0;
         for (uint i = 0; i < values.length; i++){
             uint diff = values[i] > avg ? values[i] - avg : avg - values[i];
-            sumSq += diff * diff;
+            	unchecked { sumSq += diff * diff; }
+
         }
         return sumSq / values.length;
     }

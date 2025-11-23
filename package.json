@@ -1,0 +1,22 @@
+{
+  "name": "smartgate",
+  "version": "1.0.0",
+  "description": "**SmartGate** is a modular and extensible smart contract architecture designed to control decentralized computation of statistical functions on-chain, while ensuring user anonymity and rate-limiting.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^6.1.0",
+    "dotenv": "^17.2.3",
+    "hardhat": "^2.27.0"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^5.4.0",
+    "create-react-app": "^5.1.0",
+    "recharts": "^3.5.0"
+  }
+}
